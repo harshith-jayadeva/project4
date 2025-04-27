@@ -43,21 +43,23 @@ void sendmsg(char *user, char *target, char *msg)
 
 void *messageListener(void *arg)
 {
-    int fd = open(uName, O_RDONLY);
-    
-    struct message message_container;
-    
-    while (1) {
-        
-        if (read(fd, &message_container, sizeof(struct message)) > 0) {
-            printf("\nrsh>Incoming message from %s: %s\n", message_container.source, message_container.msg);
-            fprintf(stderr, "rsh>"); 
-            fflush(stdout);
-        }
-    }
-    
-    close(fd);
-    pthread_exit(NULL);
+	int fd = open(uName, O_RDONLY);
+
+	struct message message_container;
+
+	while (1)
+	{
+
+		if (read(fd, &message_container, sizeof(struct message)) > 0)
+		{
+			printf("Incoming message from %s: %s\n", message_container.source, message_container.msg);
+			fprintf(stderr, "rsh>");
+			fflush(stdout);
+		}
+	}
+
+	close(fd);
+	pthread_exit(NULL);
 }
 
 int isAllowed(const char *cmd)
@@ -127,21 +129,24 @@ int main(int argc, char **argv)
 			int counter = 0;
 			command[2] = NULL;
 			while (cmdstr != NULL)
-			{	
-				if (counter > 1){
-					if(command[2] == NULL){
-						command[2] = malloc(strlen(cmdstr)+1);
+			{
+				if (counter > 1)
+				{
+					if (command[2] == NULL)
+					{
+						command[2] = malloc(strlen(cmdstr) + 1);
 						strcpy(command[2], cmdstr);
 					}
-					else{
+					else
+					{
 						command[2] = realloc(command[2], strlen(cmdstr) + 2 + strlen(command[2]));
 						strcat(command[2], " ");
 						strcat(command[2], cmdstr);
-						
 					}
 				}
 
-				else{
+				else
+				{
 					command[counter] = malloc(strlen(cmdstr) + 1);
 					strcpy(command[counter], cmdstr);
 				}
@@ -160,8 +165,8 @@ int main(int argc, char **argv)
 				printf("sendmsg: you have to enter a message\n");
 			}
 
-			char* target = strdup(command[1]);
-			char* message = strdup(command[2]);
+			char *target = strdup(command[1]);
+			char *message = strdup(command[2]);
 
 			sendmsg(argv[1], command[1], command[2]);
 
