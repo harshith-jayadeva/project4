@@ -6,45 +6,49 @@
 #include <string.h>
 #include <signal.h>
 
-struct message {
+struct message
+{
 	char source[50];
-	char target[50]; 
+	char target[50];
 	char msg[200]; // message body
 };
 
-void terminate(int sig) {
+void terminate(int sig)
+{
 	printf("Exiting....\n");
 	fflush(stdout);
 	exit(0);
 }
 
-int main() {
+int main()
+{
 	int server;
 	int target;
 	int dummyfd;
 	struct message req;
-	signal(SIGPIPE,SIG_IGN);
-	signal(SIGINT,terminate);
-	server = open("serverFIFO",O_RDONLY);
-	dummyfd = open("serverFIFO",O_WRONLY);
+	signal(SIGPIPE, SIG_IGN);
+	signal(SIGINT, terminate);
+	server = open("serverFIFO", O_RDONLY);
+	dummyfd = open("serverFIFO", O_WRONLY);
 
-	while (1) {
+	while (1)
+	{
 		// TODO:
 		// read requests from serverFIFO
 		read(server, &req, sizeof(struct message));
-	
+		printf("Received a request from %s to send message to %s %s\n", req.source, req.msg, req.target);
+
 		// TODO:
 		// open target FIFO and write the whole message struct to the target FIFO
 		// close target FIFO after writing the message
 		target = open(req.target, O_WRONLY);
-		if (target >= 0){
+		if (target >= 0)
+		{
 			write(target, &req, sizeof(struct message));
 			close(target);
 		}
-
 	}
 	close(server);
 	close(dummyfd);
 	return 0;
 }
-

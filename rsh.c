@@ -50,7 +50,7 @@ void *messageListener(void *arg)
     while (1) {
         
         if (read(fd, &message_container, sizeof(struct message)) > 0) {
-            printf("\nIncoming message from %s: %s\n", message_container.source, message_container.msg);
+            printf("\nrsh>Incoming message from %s: %s\n", message_container.source, message_container.msg);
             fprintf(stderr, "rsh>"); 
             fflush(stdout);
         }
